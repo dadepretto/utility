@@ -8,4 +8,5 @@ docker run \
     --volume /Users/<YourSystemUsername>/docker/mssql/log:/var/opt/mssql/log \
     --volume /Users/<YourSystemUsername>/docker/mssql/secrets:/var/opt/mssql/secrets \
     --publish 1433:1433 \
+    --restart always \
     mcr.microsoft.com/mssql/server:2019-latest
