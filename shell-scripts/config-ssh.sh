@@ -1,7 +1,7 @@
 comment=${1-$(hostname)}
 filename=${2-github}
 
-echo "-> Generate key"
+echo "-> Generating key"
 ssh-keygen -t rsa -b 4096 -a 128 -f ~/.ssh/${filename} -q -N "" -C $comment
 
 echo "-> Running ssh agent"
