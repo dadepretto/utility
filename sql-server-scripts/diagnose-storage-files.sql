@@ -19,7 +19,7 @@ select
         when 0 then N'Disabled'
         when -1 then N'Unrestricted'
         else format(([BD].[max_pages] / 131072.0), N'N2')
-    end                                                 as [max_pages_GB]
+    end                                             as [max_pages_GB]
 from [BaseData] as [BD]
     cross apply (
         select [BD].[total_pages] - [BD].[used_pages]
