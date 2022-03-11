@@ -31,7 +31,7 @@ with
             left join [sys].[indexes] as [I]
                 on [I].[object_id] = [P].[object_id]
                     and [I].[index_id] = [P].[index_id]
-        )
+    )
 select
     [resource_type]                   as [resource_type],
     [request_type]                    as [request_type],
