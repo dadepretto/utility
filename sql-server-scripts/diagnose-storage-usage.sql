@@ -50,7 +50,7 @@ with
             [BD].[partition_id]                        as [partition_id],
             [BD].[partition_number]                    as [partition_number],
             [BD].[rowcount]                            as [rowcount],
-            [DCD].[data_compression_desc]              as [data_compression_desc],
+            [DCD].[data_compression]                   as [data_compression],
             cast([PT].[free_percent] as decimal(5, 2)) as [free_percent],
             cast([GB].[total_space] as decimal(12, 4)) as [total_space_GB],
             cast([GB].[used_space] as decimal(12, 4))  as [used_space_GB],
@@ -61,7 +61,7 @@ with
             [BD].[updates_count]                       as [updates_count],
             [BD].[last_seek]                           as [last_seek],
             [BD].[last_scan]                           as [last_scan],
-            [BD].[last_lookup]                          as [last_lookup],
+            [BD].[last_lookup]                         as [last_lookup],
             [BD].[last_update]                         as [last_update]
         from [RawData] as [BD]
             cross apply (
@@ -77,11 +77,12 @@ with
                     [free_pages] / 131072.0
             ) as [GB]([total_space], [used_space], [free_space])
             cross apply (
-                select case when [BD].[data_compression_desc] = N'NONE'
-                    then N'-'
-                    else [BD].[data_compression_desc]
-            end
-            ) as [DCD]([data_compression_desc])
+                select
+                    case [BD].[data_compression_desc]
+                        when N'NONE' then N'-'
+                                     else [BD].[data_compression_desc]
+                end
+            ) as [DCD]([data_compression])
     )
 select *
 from [FormattedData]
