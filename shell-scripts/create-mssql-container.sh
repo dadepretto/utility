@@ -1,5 +1,5 @@
 initial_password=${1-P@55w0rd}
-container_name=${2-sqledge}
+container_name=${2-mssql}
 
 docker run \
     --detach \
