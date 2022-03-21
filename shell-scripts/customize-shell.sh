@@ -20,3 +20,10 @@ if ! /usr/bin/grep -q 'alias c=' "$filename"; then
 else
     echo "-> Skipping alias 'c' for clear"
 fi
+
+if ! /usr/bin/grep -q 'alias docker=' "$filename"; then
+    echo "-> Setting alias 'docker' for podman"
+    echo 'alias docker="podman"' >> $filename
+else
+    echo "-> Skipping alias 'c' for clear"
+fi
