@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 comment=${1-$(hostname)}
 filename=${2-github}
 

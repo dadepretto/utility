@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 brew install rbenv ruby-build -q
 rbenv install 3.0.0 -s
 rbenv global 3.0.0

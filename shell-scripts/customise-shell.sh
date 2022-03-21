@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 if ! /usr/bin/grep -q 'prompt=' "$HOME/.zshrc"; then
     echo "-> Setting prompt style"
     echo 'prompt="%1~ %# "' >> $HOME/.zshrc
