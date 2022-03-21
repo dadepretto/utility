@@ -1,4 +1,4 @@
-filename="~/.zshrc"
+filename="$HOME/.zshrc"
 
 if ! /usr/bin/grep -q 'prompt=' "$filename"; then
     echo "-> Setting prompt style"

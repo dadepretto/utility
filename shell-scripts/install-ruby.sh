@@ -9,5 +9,5 @@ if ! /usr/bin/grep -q 'eval "$(rbenv init - zsh)"' "$filename"; then
     exec zsh
 fi
 
-bundle update --bundler
-bundle install
+# bundle install
+# bundle update --bundler
