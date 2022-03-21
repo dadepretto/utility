@@ -1,3 +1,3 @@
-brew install podman
+brew install podman -q
 podman machine init
 podman machine start
