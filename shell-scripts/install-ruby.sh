@@ -7,6 +7,3 @@ if ! /usr/bin/grep -q 'eval "$(rbenv init - zsh)"' "$HOME/.zprofile"; then
     eval "$(rbenv init - zsh)"
     exec zsh
 fi
-
-# bundle install
-# bundle update --bundler
