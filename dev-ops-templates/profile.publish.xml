@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProfileVersionNumber>1</ProfileVersionNumber>
+    
+    <!-- Deployment-related -->
+    <AllowIncompatiblePlatform>True</AllowIncompatiblePlatform>
+    <BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
+    <GenerateSmartDefaults>True</GenerateSmartDefaults>
+    <ScriptDatabaseOptions>False</ScriptDatabaseOptions>
+
+    <!-- Users, logins, roles and assignments -->
+    <ExcludeLogins>True</ExcludeLogins>
+    <ExcludeUsers>True</ExcludeUsers>
+    <IgnorePermissions>True</IgnorePermissions>
+    <IgnoreRoleMembership>True</IgnoreRoleMembership>
+    <DropPermissionsNotInSource>True</DropPermissionsNotInSource>
+
+    <!-- Indexes, objects, constraints -->
+    <DropIndexesNotInSource>True</DropIndexesNotInSource>
+    <DropObjectsNotInSource>True</DropObjectsNotInSource>
+    <DropConstraintsNotInSource>True</DropConstraintsNotInSource>
+    <DropStatisticsNotInSource>False</DropStatisticsNotInSource>
+  </PropertyGroup>
+</Project>
