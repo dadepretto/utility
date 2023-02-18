@@ -20,10 +20,3 @@ if ! /usr/bin/grep -q 'alias c=' "$HOME/.zshrc"; then
 else
     echo "-> Skipping alias 'c' for clear"
 fi
-
-if ! /usr/bin/grep -q 'alias docker=' "$HOME/.zprofile"; then
-    echo "-> Setting alias 'docker' for podman"
-    echo 'alias docker="podman"' >> $HOME/.zprofile
-else
-    echo "-> Skipping alias 'docker' for podman"
-fi
