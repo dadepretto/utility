@@ -6,80 +6,88 @@ declare
     @objectId int
 begin
     set xact_abort, nocount on;
-    set transaction isolation level read committed;
+
+    set @object = trim(@object);
 
     if object_id(@object) is not null
     begin
         set @objectId = object_id(@object);
     end;
-    else if isnumeric(@object) = 1 and object_name(@object) is not null
+    else if object_name(try_cast(@object as int)) is not null
     begin
-        set @objectId = cast(@object as integer);
+        set @objectId = try_cast(@object as int);
     end;
     else
     begin
         raiserror(N'Cannot find object with name or id "%s".', 16, 1, @object);
+        return;
     end;
 
     with
         [AllDependencies] as (
-            select distinct [object_id], [referenced_major_id]
-            from [sys].[sql_dependencies]
+            select distinct
+                [D].[referencing_id]                        as [referencing_id],
+                [D].[referenced_id]                         as [referenced_id]
+            from [sys].[sql_expression_dependencies] as [D]
+            where [D].[referenced_id] is not null
         ),
         [Uses] as (
             select
-                cast(N'Uses' as nvarchar(max))              as [dependecy_type],
-                0                                           as [dependecy_depth],
-                [D].[referenced_major_id]                   as [object_id]
+                cast(N'Uses' as nvarchar(20))               as [dependency_type],
+                0                                           as [dependency_depth],
+                [D].[referenced_id]                         as [object_id]
             from [AllDependencies] as [D]
-            where [D].[object_id] = @objectId
+            where [D].[referencing_id] = @objectId
 
             union all
 
             select
-                cast(N'UsesIndirectly' as nvarchar(max))    as [dependecy_type],
-                [U].[dependecy_depth] + 1                   as [dependecy_depth],
-                [D].[referenced_major_id]                   as [object_id]
+                cast(N'UsesIndirectly' as nvarchar(20))     as [dependency_type],
+                [U].[dependency_depth] + 1                  as [dependency_depth],
+                [D].[referenced_id]                         as [object_id]
             from [AllDependencies] as [D]
                 inner join [Uses] as [U]
-                    on [D].[object_id] = [U].[object_id]
+                    on [D].[referencing_id] = [U].[object_id]
         ),
         [UsedBy] as (
             select
-                cast(N'UsedBy' as nvarchar(max))            as [dependecy_type],
-                0                                           as [dependecy_depth],
-                [D].[object_id]                             as [object_id]
+                cast(N'UsedBy' as nvarchar(20))             as [dependency_type],
+                0                                           as [dependency_depth],
+                [D].[referencing_id]                        as [object_id]
             from [AllDependencies] as [D]
-            where [D].[referenced_major_id] = @objectId
+            where [D].[referenced_id] = @objectId
 
             union all
 
             select
-                cast(N'UsedByIndirectly' as nvarchar(max))  as [dependecy_type],
-                [U].[dependecy_depth] + 1                   as [dependecy_depth],
-                [D].[object_id]                             as [object_id]
+                cast(N'UsedByIndirectly' as nvarchar(20))   as [dependency_type],
+                [U].[dependency_depth] + 1                  as [dependency_depth],
+                [D].[referencing_id]                        as [object_id]
             from [AllDependencies] as [D]
                 inner join [UsedBy] as [U]
-                    on [D].[referenced_major_id] = [U].[object_id]
+                    on [D].[referenced_id] = [U].[object_id]
         ),
         [ObjectDependencies] as (
-            select * from [Uses] 
+            select * from [Uses]
             union all
             select * from [UsedBy]
         )
     select distinct
-        [D].[dependecy_type]        as [dependecy_type],
-        [D].[dependecy_depth]       as [dependecy_depth],
-        [O].[type_desc]             as [object_type],
-        [S].[name]                  as [object_schema_name],
-        [O].[name]                  as [object_name]
+        [D].[dependency_type]                               as [dependency_type],
+        [D].[dependency_depth]                              as [dependency_depth],
+        [O].[type_desc]                                     as [object_type],
+        [S].[name]                                          as [object_schema_name],
+        [O].[name]                                          as [object_name]
     from [ObjectDependencies] as [D]
         inner join [sys].[objects] as [O]
             on [D].[object_id] = [O].[object_id]
         inner join [sys].[schemas] as [S]
             on [O].[schema_id] = [S].[schema_id]
-    order by [dependecy_type], [dependecy_depth], [object_schema_name]
+    order by
+        [dependency_type],
+        [dependency_depth],
+        [object_schema_name],
+        [object_name]
     option (maxrecursion 4096);
-    
 end;
 go
